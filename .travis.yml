@@ -1,0 +1,49 @@
+language: java
+jdk: oraclejdk8
+
+sudo: required
+dist: trusty
+
+env:
+  global:
+    - CODECOV_TOKEN="799dc403-f72a-4b5a-80ec-cc461246728c"
+
+addons:
+  postgresql: "9.6"
+
+services:
+  - postgresql
+
+before_install:
+  - chmod +x mvnw
+
+before_script:
+  - psql -c "create user motorlog with password 'motorlog'" -U postgres
+  - psql -c "create database motorlog owner motorlog" -U postgres
+
+script:
+  - ./mvnw verify
+  - if [[ $TRAVIS_BRANCH == master ]]; then git archive --format zip --output ./release.zip master; echo "Release file successfully generated."; fi
+
+before_deploy:
+  - git config --local user.name $GITHUB_USER
+  - git config --local user.email $GITHUB_EMAIL
+  - export YEAR=`date +"%Y"`
+  - export GIT_TAG=v$TRAVIS_BUILD_NUMBER-$YEAR
+  - git tag -a $GIT_TAG -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+
+deploy:
+  provider: releases
+  api-key:
+    secure: $GITHUB_TOKEN
+  file: "./release.zip"
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: false
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  email: false

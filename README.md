@@ -1,2 +1,1 @@
-# Motorlog
-This is the Motorlog application repository
+# Motorlog [![Build Status](https://travis-ci.com/Eddydpyl/motorlog.svg?token=Fpth26ybpqjsTJdNeqmb&branch=master)](https://travis-ci.com/Eddydpyl/motorlog) [![codecov](https://codecov.io/gh/Eddydpyl/motorlog/branch/master/graph/badge.svg?token=hEEMm0g71e)](https://codecov.io/gh/Eddydpyl/motorlog)
